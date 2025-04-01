@@ -7,4 +7,4 @@ export default function groceriesList() {
     groceries.set('Rice', 1);
     groceries.set('Banana', 5);
     return groceries;
-  }
+}
