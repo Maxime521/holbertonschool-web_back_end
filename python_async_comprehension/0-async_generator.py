@@ -8,8 +8,8 @@ import random
 
 async def async_generator():
     """
-    Asynchronous coroutine that generates 10 random numbers between 0 and 10,
-    waiting 1 second between each generation.
+    An asynchronous generator that yields a random number between 0 and 10
+    after asynchronously waiting for 1 second, 10 times.
     """
     for _ in range(10):
         await asyncio.sleep(1)
