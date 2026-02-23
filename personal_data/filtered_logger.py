@@ -5,6 +5,8 @@ Module for filtering and obfuscating log messages containing PII
 import re
 from typing import List
 import logging
+import os
+import mysql.connector
 
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
@@ -66,3 +68,30 @@ def get_logger() -> logging.Logger:
     handler.setFormatter(RedactingFormatter(fields=PII_FIELDS))
     logger.addHandler(handler)
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """
+    Returns a connector to the MySQL database using credentials from
+    environment variables.
+
+    Environment variables:
+        PERSONAL_DATA_DB_USERNAME: database username (default: "root")
+        PERSONAL_DATA_DB_PASSWORD: database password (default: "")
+        PERSONAL_DATA_DB_HOST: database host (default: "localhost")
+        PERSONAL_DATA_DB_NAME: database name
+
+    Returns:
+        MySQLConnection object
+    """
+    username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
+    password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
+    host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    db_name = os.getenv("PERSONAL_DATA_DB_NAME")
+
+    return mysql.connector.connect(
+        user=username,
+        password=password,
+        host=host,
+        database=db_name
+    )
