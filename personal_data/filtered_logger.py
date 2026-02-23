@@ -95,3 +95,31 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         host=host,
         database=db_name
     )
+
+
+def main():
+    """
+    Main function to demonstrate retrieving and displaying user data
+    from the database with PII fields obfuscated.
+    """
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+
+    header = []
+    for col in cursor.description:
+        header.append(col[0])
+
+    logger = get_logger()
+
+    for row in cursor:
+        info_message = ""
+        for i, col in enumerate(row):
+            info_message += f"{header[i]}={col};"
+        logger.info(info_message)
+
+    cursor.close()
+    db.close()
+
+if __name__ == "__main__":
+    main()
