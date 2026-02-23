@@ -43,6 +43,9 @@ class RedactingFormatter(logging.Formatter):
         self.fields = list(fields)
 
     def format(self, record: logging.LogRecord) -> str:
+        """
+        Redact sensitive fields in log message before formatting
+        """
         message = record.getMessage()
         record.msg = filter_datum(
             self.fields, self.REDACTION, message, self.SEPARATOR)
