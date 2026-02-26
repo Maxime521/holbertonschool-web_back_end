@@ -2,7 +2,6 @@
 """ Module of BasicAuth views
 """
 import base64
-
 from typing import Tuple, TypeVar
 from api.v1.auth.auth import Auth
 from models.user import User
@@ -83,4 +82,29 @@ class BasicAuth(Auth):
         if not user.is_valid_password(user_pwd):
             return None
 
+        return user
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """"Current user method"""
+
+        if request is None:
+            return None
+
+        auth_header = self.authorization_header(request)
+        if auth_header is None:
+            return None
+
+        base64_auth = self.extract_base64_authorization_header(auth_header)
+        if base64_auth is None:
+            return None
+
+        decoded_auth = self.decode_base64_authorization_header(base64_auth)
+        if decoded_auth is None:
+            return None
+
+        email, password = self.extract_user_credentials(decoded_auth)
+        if email is None or password is None:
+            return None
+
+        user = self.user_object_from_credentials(email, password)
         return user
