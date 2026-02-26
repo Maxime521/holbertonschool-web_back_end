@@ -3,7 +3,7 @@
 """
 import base64
 
-from click import Tuple
+from typing import Tuple
 from api.v1.auth.auth import Auth
 
 
